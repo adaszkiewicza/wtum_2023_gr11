@@ -14,3 +14,9 @@ Język programowania, którego planujemy użyć to **python** (w wersji 3+). Do 
 Program powinien otrzymać 2 zestawy danych:
 1. obrazy wybranego malarza (w rozmiarze 256x256) - które będą użyte do wytrenowania modelu
 2. zdjęcia (w rozmiarze 256x256), które docelowo program ma przerobić na obrazy w stylu wybranego malarza
+
+## Przydział zadań
+Antek Adaszkiewicz - Generatory
+Patryk Burzycki - Dyskryminatory
+Adrian Cieśla - Obróbka zdjec na wejsciu/zapis na wyjscie + wyświetlanie
+Anita Czech - polaczenie czesci w calosc i nadzorowanie sieci
