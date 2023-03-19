@@ -18,9 +18,12 @@ def loadImage():
 root = Tk()
 root.title('WTUM Image Viewer')
 
-my_img = ImageTk.PhotoImage(Image.open("images/sheep.jpg"))
+# my_img = ImageTk.PhotoImage(Image.open("images/sheep.jpg"))
+my_img = PhotoImage(file="images/sheep.jpg")
 
-my_label = Label(image=my_img)
+original_image = my_img.subsample(3,3)
+
+my_label = Label(image=original_image)
 my_label.grid(row=0,column=0,columnspan=2)
 
 button_back = Button(root, text="LOAD IMAGE", command = loadImage)
@@ -28,6 +31,5 @@ button_exit = Button(root, text="EXIT PROGRAM", command=root.quit)
 
 button_back.grid(row=1, column=0)
 button_exit.grid(row=1,column=1)
-
 
 root.mainloop()
