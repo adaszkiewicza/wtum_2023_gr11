@@ -16,7 +16,33 @@ Program powinien otrzymać 2 zestawy danych:
 2. zdjęcia (w rozmiarze 256x256), które docelowo program ma przerobić na obrazy w stylu wybranego malarza
 
 ## Przydział zadań
-1. Antek Adaszkiewicz - Generatory
-2. Patryk Burzycki - Dyskryminatory
-3. Adrian Cieśla - Obróbka zdjec na wejsciu/zapis na wyjscie + wyświetlanie
-4. Anita Czech - polaczenie czesci w calosc i nadzorowanie sieci
+Adrian:
+- dokończenie aplikacji okienkowej
+- obróbka(skalowanie) zdjęć wgrywanych do aplikacji
+- przygotowanie datasetu do GANa
+- wizualizacja wyników (GAN i szumy)
+
+Patryk:
+- generator GAN
+- funkcje strat GAN
+- wytrenowanie GAN
+
+Anita:
+- dyskryminator GAN
+- funkcje strat GAN
+- wytrenowanie GAN
+
+Michał:
+- zbudowanie + wytrenowanie modelu do odszumiania
+
+Antek:
+- generacja szumów danych
+- odszumianie
+
+wszyscy:
+- stworzenie raportu, porównanie ywników, wnioski (każdy o swojej części)
+
+jak starczy czasu:
+- dodanie generowania z szumów zdjęć i generowanie z nich za pomocą GANa obrazów artysty i porównanie wyników z 
+  podstawowym modelem diffiusion (wizualne porównania)
+- ocena wyników diffiusion poprzez dyskryminator z GANa
