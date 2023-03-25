@@ -40,7 +40,7 @@ Antek:
 - odszumianie
 
 wszyscy:
-- stworzenie raportu, porównanie ywników, wnioski (każdy o swojej części)
+- stworzenie raportu, porównanie wyników, wnioski (każdy o swojej części)
 
 jak starczy czasu:
 - dodanie generowania z szumów zdjęć i generowanie z nich za pomocą GANa obrazów artysty i porównanie wyników z 
