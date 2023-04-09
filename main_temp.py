@@ -1,4 +1,5 @@
 from tkinter import *
+from PIL import Image, ImageTk
 import easygui
 
 def load_image():
@@ -7,7 +8,9 @@ def load_image():
     global root
     
     filename = easygui.fileopenbox(filetypes=["*.gif"])
-    image = PhotoImage(Image.open(filename))
+    imaget = Image.open(filename)
+    imaget = imaget.resize((400,400))
+    image = ImageTk.PhotoImage(imaget)
 
 root = Tk()  # create root window
 root.title("Basic GUI Layout")  # title of the GUI window
@@ -30,7 +33,10 @@ Label(left_frame, text="Original Image").grid(row=0, column=0, padx=5, pady=5)
 Label(right_frame, text="Result Image").grid(row=0, column=0, padx=5, pady=5)
 
 # load image to be "edited"
-image = PhotoImage(file="images/ziemia.gif")
+imaget = Image.open("images/wow.gif")
+imaget = imaget.resize((400,400))
+
+image = ImageTk.PhotoImage(imaget)
 Label(left_frame, image=image).grid(row=1, column=0, padx=5, pady=5)
 
 # Display image in right_frame

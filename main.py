@@ -19,7 +19,7 @@ root = Tk()
 root.title('WTUM Image Viewer')
 
 # my_img = ImageTk.PhotoImage(Image.open("images/sheep.jpg"))
-my_img = PhotoImage(file="images/sheep.jpg")
+my_img = PhotoImage(file="images/ziemia.gif")
 
 original_image = my_img.subsample(3,3)
 
