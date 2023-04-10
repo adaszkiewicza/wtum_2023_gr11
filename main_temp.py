@@ -2,7 +2,6 @@ from tkinter import *
 from PIL import Image, ImageTk
 import easygui
 
-
 def load_image():
     global image 
     global left_frame
@@ -47,6 +46,11 @@ label2 = Label(right_frame, image=image).grid(row=1,column=0, padx=5, pady=5)
 
 Button(bottom_frame, text="LOAD IMAGE", command=load_image).grid(row=0, column=0, padx=5, pady=5)
 Checkbutton(bottom_frame, text='Is generated from noise', onvalue=1, offvalue=0).grid(row=0,column=1,padx=5,pady=5)
-Button(bottom_frame, text="EXIT APPLICATION", command=root.quit).grid(row=0, column=2, padx=5, pady=5)
+w = Listbox(bottom_frame, height=3)
+w.grid(row=0,column=2,padx=5,pady=5)
+w.insert(1, "Jan Matejko")
+w.insert(2, "Da Vinci")
+w.insert(3, "Van Gogh")
+Button(bottom_frame, text="EXIT APPLICATION", command=root.quit).grid(row=0, column=3, padx=5, pady=5)
 
 root.mainloop()
