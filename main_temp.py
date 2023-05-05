@@ -4,11 +4,6 @@ import easygui
 from gan import gan_function
 import numpy as np
 import tensorflow as tf
-import matplotlib.pyplot as plt
-import cv2
-from tensorflow import keras
-from tensorflow.keras.preprocessing.image import img_to_array
-from keras.preprocessing import image as kimage
 
 def load_image():
     global image 
