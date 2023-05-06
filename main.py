@@ -9,6 +9,7 @@ MONET = 0
 VANGOGH = 1
 UKIYOE = 2
 EXAMPLE_PATH = "images/example.jpg"
+IMAGE_DISPLAY_SIZE = (400, 400)
 
 def preprocess_image(img):
     img = tf.io.decode_image(img)
@@ -34,7 +35,7 @@ def generate_picture(img):
 
     prediction = (prediction * 127.5 + 127.5).astype(np.uint8)
     generated_img = Image.fromarray(prediction)
-    generated_img = generated_img.resize((400, 400))
+    generated_img = generated_img.resize(IMAGE_DISPLAY_SIZE)
     generated_img = ImageTk.PhotoImage(generated_img)
 
     label2 = Label(right_frame, image=generated_img)
@@ -51,10 +52,11 @@ def load_image():
     global label1
     global label2
     global original_img
-    
-    filename = easygui.fileopenbox(filetypes=["*.gif"])
+
+    filename = easygui.fileopenbox(filetypes=["*.png", "*.jpg"]) # need to change so that they are both in one tab and
+                        # so that only files of these types can be selected (still better than GIFs, so its improvement)
     image = Image.open(filename)
-    image = image.resize((400, 400))
+    image = image.resize(IMAGE_DISPLAY_SIZE)
     image = ImageTk.PhotoImage(image)
     label1 = Label(left_frame, image=image).grid(row=1, column=0, padx=5, pady=5)
 
@@ -106,7 +108,7 @@ ukiyoe_generator = gan_function(UKIYOE)
 
 # load image to be "edited"
 image = Image.open(EXAMPLE_PATH)
-image = image.resize((400, 400))
+image = image.resize(IMAGE_DISPLAY_SIZE)
 image = ImageTk.PhotoImage(image)
 label1 = Label(left_frame, image=image).grid(row=1, column=0, padx=5, pady=5)
 first_image_generate(EXAMPLE_PATH)
