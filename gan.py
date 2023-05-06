@@ -1,67 +1,16 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
 import os
 import tensorflow as tf
 from tensorflow import keras
 from keras import layers
 import tensorflow_addons as tfa
 
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-# Press the green button in the gutter to run the script.
+MONET_PATH = "models/monet_generator_weights.h5"
+VANGOGH_PATH = "models/vangogh_generator_weights.h5"
+UKIYOE_PATH = "models/ukiyoe_generator_weights.h5"
 
 def gan_function(artist = 0):
 
-
-    directory = os.getcwd()
-
-# Print names of the files in given folder - a test to see if it works AND it works
-# for dirname, _, filenames in os.walk(directory+'\MonetJPG'):
-#   for filename in filenames:
-#      print(os.path.join(dirname, filename))
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
-
     strategy = tf.distribute.get_strategy()
-
-    AUTOTUNE = tf.data.experimental.AUTOTUNE
-
-    MONET_FILENAMES = tf.io.gfile.glob(directory + '\MonetTFREC\*')
-    PHOTO_FILENAMES = tf.io.gfile.glob(directory + '\PhotoTFREC\*')
-
-    IMAGE_SIZE = [256, 256]
-
-
-    def decode_image(image):
-        image = tf.image.decode_jpeg(image, channels=3)
-        image = (tf.cast(image, tf.float32) / 127.5) - 1
-        image = tf.reshape(image, [*IMAGE_SIZE, 3])
-        return image
-
-
-    def read_tfrecord(example):
-        tfrecord_format = {
-            "image_name": tf.io.FixedLenFeature([], tf.string),
-            "image": tf.io.FixedLenFeature([], tf.string),
-            "target": tf.io.FixedLenFeature([], tf.string)
-        }
-        example = tf.io.parse_single_example(example, tfrecord_format)
-        image = decode_image(example['image'])
-        return image
-
-
-    def load_dataset(filenames, labeled=True, ordered=False):
-        dataset = tf.data.TFRecordDataset(filenames)
-        dataset = dataset.map(read_tfrecord, num_parallel_calls=AUTOTUNE)
-        return dataset
-
-
-    monet_ds = load_dataset(MONET_FILENAMES, labeled=True).batch(1)
-    photo_ds = load_dataset(PHOTO_FILENAMES, labeled=True).batch(1)
 
     OUTPUT_CHANNELS = 3
 
@@ -190,23 +139,15 @@ def gan_function(artist = 0):
 
         return model
 
-
-    # with strategy.scope():
-    #     monet_generator = Generator()  # transforms photos to Monet-esque paintings
-    #     photo_generator = Generator()  # transforms Monet paintings to be more like photos
-    #
-    #     monet_discriminator = Discriminator()  # differentiates real Monet paintings and generated Monet paintings
-    #     photo_discriminator = Discriminator()  # differentiates real photos and generated photos
-
     with strategy.scope():
         if(artist == 0):
-            monet_generator = Generator(weights_path="models/monet_generator_weights.h5")
+            monet_generator = Generator(weights_path=MONET_PATH)
         elif(artist == 1):
-            monet_generator = Generator(weights_path="models/vangogh_generator_weights.h5")
+            monet_generator = Generator(weights_path=VANGOGH_PATH)
         elif(artist == 2):
-            monet_generator = Generator(weights_path="models/ukiyoe_generator_weights.h5")
+            monet_generator = Generator(weights_path=UKIYOE_PATH)
         else:
-            monet_generator = Generator(weights_path="models/monet_generator_weights.h5")
+            monet_generator = Generator(weights_path=MONET_PATH)
 
         photo_generator = Generator()
 
@@ -377,22 +318,4 @@ def gan_function(artist = 0):
             identity_loss_fn=identity_loss
         )
 
-    # cycle_gan_model.fit(
-    #     tf.data.Dataset.zip((monet_ds, photo_ds)),
-    #     epochs=3
-    # )
-    #
-    # _, ax = plt.subplots(5, 2, figsize=(12, 12))
-    # for i, img in enumerate(photo_ds.take(5)):
-    #     prediction = monet_generator(img, training=False)[0].numpy()
-    #     prediction = (prediction * 127.5 + 127.5).astype(np.uint8)
-    #     img = (img[0] * 127.5 + 127.5).numpy().astype(np.uint8)
-    #
-    #     ax[i, 0].imshow(img)
-    #     ax[i, 1].imshow(prediction)
-    #     ax[i, 0].set_title("Input Photo")
-    #     ax[i, 1].set_title("Monet-esque")
-    #     ax[i, 0].axis("off")
-    #     ax[i, 1].axis("off")
-    # plt.show()
     return monet_generator
