@@ -6,13 +6,13 @@ import tensorflow_addons as tfa
 MONET_PATH = "models/monet_generator_weights.h5"
 VANGOGH_PATH = "models/vangogh_generator_weights.h5"
 UKIYOE_PATH = "models/ukiyoe_generator_weights.h5"
+CEZANNE_PATH = "models/cezanne_generator_weights.h5"
 
 def gan_function(artist = 0):
 
     strategy = tf.distribute.get_strategy()
 
     OUTPUT_CHANNELS = 3
-
 
     def downsample(filters, size, apply_instancenorm=True):
         initializer = tf.random_normal_initializer(0., 0.02)
@@ -145,6 +145,8 @@ def gan_function(artist = 0):
             monet_generator = Generator(weights_path=VANGOGH_PATH)
         elif(artist == 2):
             monet_generator = Generator(weights_path=UKIYOE_PATH)
+        elif (artist == 3):
+            monet_generator = Generator(weights_path=CEZANNE_PATH)
         else:
             monet_generator = Generator(weights_path=MONET_PATH)
 

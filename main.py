@@ -13,6 +13,7 @@ class Painters(Enum):
     MONET = 0
     VANGOGH = 1
     UKIYOE = 2
+    CEZANNE = 3
 
 class App:
     def __init__(self):
@@ -28,6 +29,7 @@ class App:
         self.monet_generator = gan_function(Painters.MONET.value)
         self.vangogh_generator = gan_function(Painters.VANGOGH.value)
         self.ukiyoe_generator = gan_function(Painters.UKIYOE.value)
+        self.cezanne_generator = gan_function(Painters.CEZANNE.value)
 
     def setup_root(self):
         self.root = Tk()
@@ -60,6 +62,7 @@ class App:
         self.selected_artist.insert(Painters.MONET.value, "Monet")
         self.selected_artist.insert(Painters.VANGOGH.value, "Van Gogh")
         self.selected_artist.insert(Painters.UKIYOE.value, "Ukiyoe")
+        self.selected_artist.insert(Painters.CEZANNE.value, "Cezanne")
         self.selected_artist.selection_set(0)
         self.selected_artist.bind("<<ListboxSelect>>", lambda event: self.selected_artist_changed())
 
@@ -92,6 +95,9 @@ class App:
 
             elif index == 2:
                 prediction = self.ukiyoe_generator(img, training=False)[0].numpy()
+
+            elif index == 3:
+                prediction = self.cezanne_generator(img, training=False)[0].numpy()
 
         else:
             prediction = self.monet_generator(img, training=False)[0].numpy()
