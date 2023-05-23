@@ -6,8 +6,15 @@ from PIL import Image, ImageTk
 from gan import gan_function
 from enum import Enum
 
+from super_image import EdsrModel, ImageLoader, MdsrModel
+import os
+
+from diffusion import DIFF_MODELS_CONFIG, DiffImageGeneration
+
+import time 
+
 EXAMPLE_PATH = "images/example.jpg"
-IMAGE_DISPLAY_SIZE = (400, 400)
+IMAGE_DISPLAY_SIZE = (256, 256)
 
 class Painters(Enum):
     MONET = 0
@@ -21,6 +28,8 @@ class App:
         self.setup_root()
         self.setup_listbox()
         self.setup_image_first()
+        
+        self.diff_window = DiffWindow(self.root, self.diff_generation_finished_callback)
 
     def run(self):
         self.root.mainloop()
@@ -54,7 +63,7 @@ class App:
 
         Button(self.bottom_frame, text="LOAD IMAGE", command=self.load_image).grid(row=0, column=0, padx=5, pady=5)
 
-        Checkbutton(self.bottom_frame, text='Is generated from noise', onvalue=1, offvalue=0).grid(row=0, column=1, padx=5, pady=5)
+        Button(self.bottom_frame, text="GENERATE IMAGE", command=self.on_open_generation_window).grid(row=0, column=1, padx=5, pady=5)
 
     def setup_listbox(self):
         self.selected_artist = Listbox(self.bottom_frame, height=len(Painters))
@@ -120,6 +129,32 @@ class App:
     def selected_artist_changed(self):
         self.generate_picture(self.original_img)
 
+    def on_open_generation_window(self):
+        self.diff_window.open()
+
+    def diff_generation_finished_callback(self, image):
+        resizing_model = MdsrModel.from_pretrained('eugenesiow/mdsr', scale=2)
+        inputs = ImageLoader.load_image(image)
+        preds = resizing_model(inputs)
+
+        image_filename = 'temp.png'
+        ImageLoader.save_image(preds, image_filename)
+
+        image = Image.open(image_filename)
+        image = ImageTk.PhotoImage(image)
+
+        self.label_original = Label(self.left_frame, image=image)
+        self.label_original.image = image
+        self.label_original = self.label_original.grid(row=1, column=0, padx=5, pady=5)
+
+        img_to_generate_painting = tf.io.read_file(image_filename)
+        img_to_generate_painting = self.preprocess_image(img_to_generate_painting)
+        self.original_img = img_to_generate_painting
+        self.generate_picture(img_to_generate_painting)
+
+        os.remove(image_filename)
+    
+
     def load_image(self):
         filename = easygui.fileopenbox(filetypes=["*.png", "*.jpg"]) # need to change so that they are both in one tab and
                             # so that only files of these types can be selected (still better than GIFs, so its improvement)
@@ -135,6 +170,53 @@ class App:
         img_to_generate_painting = self.preprocess_image(img_to_generate_painting)
         self.original_img = img_to_generate_painting
         self.generate_picture(img_to_generate_painting)
+
+class DiffWindow:
+    def __init__(self, master, generation_finished_callback):
+        self.master = master
+        self.diff_image_generator = DiffImageGeneration()
+        self.diff_image_generator.set_callbacks(self.step_callback, self.finished_callback)
+        self.master_callback = generation_finished_callback
+
+    def open(self):
+        self.diff_window = Toplevel(self.master)
+        self.diff_window.title('Generate an image using diffusion')
+        Label(self.diff_window, text='Generate an image using diffusion')
+        self.setup_listbox()
+        self.setup_button()
+        self.setup_label()
+        
+
+    def setup_listbox(self):
+        self.listbox = Listbox(self.diff_window, height=len(DIFF_MODELS_CONFIG))
+        for index, model_name in enumerate(DIFF_MODELS_CONFIG):
+            self.listbox.insert(index, model_name)
+        
+        self.listbox.selection_set(0)
+        self.listbox.bind("<<ListboxSelect>>", lambda event: self.on_selection_changed())
+        self.listbox.pack(side=LEFT)
+
+    def setup_button(self):
+        button = Button(self.diff_window, text="GENERATE", command=self.on_generate_clicked)
+        button.pack(side=RIGHT)
+
+    def on_selection_changed(self):
+        self.diff_image_generator.switch_active_model(self.listbox.curselection()[0])
+    
+    def setup_label(self):
+        self.label = Label(self.diff_window, text='Status: not doing anything')
+        self.label.pack(side=TOP)
+
+    def step_callback(self, iter, max_iter):
+        self.label.config(text=f'Status: {(iter / max_iter * 100):.2f}%')
+        self.label.update_idletasks()
+    
+    def finished_callback(self, image):
+        self.diff_window.destroy()
+        self.master_callback(image)
+
+    def on_generate_clicked(self):
+        self.diff_image_generator.generate_image()
 
 
 if __name__ == '__main__':
