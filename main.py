@@ -6,12 +6,10 @@ from PIL import Image, ImageTk
 from gan import gan_function
 from enum import Enum
 
-from super_image import EdsrModel, ImageLoader, MdsrModel
+from super_image import ImageLoader, MdsrModel
 import os
 
 from diffusion import DIFF_MODELS_CONFIG, DiffImageGeneration
-
-import time 
 
 EXAMPLE_PATH = "images/example.jpg"
 IMAGE_DISPLAY_SIZE = (256, 256)
