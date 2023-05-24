@@ -5,6 +5,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 from gan import gan_function
 from enum import Enum
+from tkinter import filedialog
 
 from super_image import ImageLoader, MdsrModel
 import os
@@ -15,10 +16,14 @@ EXAMPLE_PATH = "images/example.jpg"
 IMAGE_DISPLAY_SIZE = (256, 256)
 
 class Painters(Enum):
-    MONET = 0
-    VANGOGH = 1
-    UKIYOE = 2
-    CEZANNE = 3
+    MONET_1 = 0
+    MONET_2 = 1
+    VANGOGH = 2
+    UKIYOE = 3
+    CEZANNE_1 = 4
+    CEZANNE_2 = 5
+    ROSS = 6
+    TURNER = 7
 
 class App:
     def __init__(self):
@@ -33,10 +38,14 @@ class App:
         self.root.mainloop()
 
     def setup_generators(self):
-        self.monet_generator = gan_function(Painters.MONET.value)
+        self.monet_1_generator = gan_function(Painters.MONET_1.value)
+        self.monet_2_generator = gan_function(Painters.MONET_2.value)
         self.vangogh_generator = gan_function(Painters.VANGOGH.value)
         self.ukiyoe_generator = gan_function(Painters.UKIYOE.value)
-        self.cezanne_generator = gan_function(Painters.CEZANNE.value)
+        self.cezanne_1_generator = gan_function(Painters.CEZANNE_1.value)
+        self.cezanne_2_generator = gan_function(Painters.CEZANNE_2.value)
+        self.ross_generator = gan_function(Painters.ROSS.value)
+        self.turner_generator = gan_function(Painters.TURNER.value)
 
     def setup_root(self):
         self.root = Tk()
@@ -61,15 +70,26 @@ class App:
 
         Button(self.bottom_frame, text="LOAD IMAGE", command=self.load_image).grid(row=0, column=0, padx=5, pady=5)
 
-        Button(self.bottom_frame, text="GENERATE IMAGE", command=self.on_open_generation_window).grid(row=0, column=1, padx=5, pady=5)
+        Button(self.bottom_frame, text="GENERATE IMAGE", command=self.on_open_generation_window).grid(row=0, column=1,
+                                                                                                      padx=5, pady=5)
+
+        Button(self.bottom_frame, text="SAVE ORIGINAL IMAGE", command=lambda: self.save_image(True))\
+            .grid(row=0, column=3, padx=5, pady=5)
+
+        Button(self.bottom_frame, text="SAVE GENERATED PAINTING", command=lambda: self.save_image(False))\
+            .grid(row=0, column=4, padx=5, pady=5)
 
     def setup_listbox(self):
         self.selected_artist = Listbox(self.bottom_frame, height=len(Painters))
         self.selected_artist.grid(row=0, column=2, padx=5, pady=5)
-        self.selected_artist.insert(Painters.MONET.value, "Monet")
+        self.selected_artist.insert(Painters.MONET_1.value, "Monet v1")
+        self.selected_artist.insert(Painters.MONET_2.value, "Monet v2")
         self.selected_artist.insert(Painters.VANGOGH.value, "Van Gogh")
         self.selected_artist.insert(Painters.UKIYOE.value, "Ukiyoe")
-        self.selected_artist.insert(Painters.CEZANNE.value, "Cezanne")
+        self.selected_artist.insert(Painters.CEZANNE_1.value, "Cezanne v1")
+        self.selected_artist.insert(Painters.CEZANNE_2.value, "Cezanne v2")
+        self.selected_artist.insert(Painters.ROSS.value, "Bob Ross")
+        self.selected_artist.insert(Painters.TURNER.value, "Turner")
         self.selected_artist.selection_set(0)
         self.selected_artist.bind("<<ListboxSelect>>", lambda event: self.selected_artist_changed())
 
@@ -80,7 +100,7 @@ class App:
 
         self.label_original = Label(self.left_frame, image=image)
         self.label_original.image = image
-        self.label_original = self.label_original.grid(row=1, column=0, padx=5, pady=5)
+        self.label_original.grid(row=1, column=0, padx=5, pady=5)
 
         self.first_image_generate(EXAMPLE_PATH)
 
@@ -95,19 +115,31 @@ class App:
         if selected_index:
             index = selected_index[0]
             if index == 0:
-                prediction = self.monet_generator(img, training=False)[0].numpy()
+                prediction = self.monet_1_generator(img, training=False)[0].numpy()
 
             elif index == 1:
-                prediction = self.vangogh_generator(img, training=False)[0].numpy()
+                prediction = self.monet_2_generator(img, training=False)[0].numpy()
 
             elif index == 2:
-                prediction = self.ukiyoe_generator(img, training=False)[0].numpy()
+                prediction = self.vangogh_generator(img, training=False)[0].numpy()
 
             elif index == 3:
-                prediction = self.cezanne_generator(img, training=False)[0].numpy()
+                prediction = self.ukiyoe_generator(img, training=False)[0].numpy()
+
+            elif index == 4:
+                prediction = self.cezanne_1_generator(img, training=False)[0].numpy()
+
+            elif index == 5:
+                prediction = self.cezanne_2_generator(img, training=False)[0].numpy()
+
+            elif index == 6:
+                prediction = self.ross_generator(img, training=False)[0].numpy()
+
+            elif index == 7:
+                prediction = self.turner_generator(img, training=False)[0].numpy()
 
         else:
-            prediction = self.monet_generator(img, training=False)[0].numpy()
+            prediction = self.monet_1_generator(img, training=False)[0].numpy()
 
         prediction = (prediction * 127.5 + 127.5).astype(np.uint8)
         generated_img = Image.fromarray(prediction)
@@ -143,7 +175,7 @@ class App:
 
         self.label_original = Label(self.left_frame, image=image)
         self.label_original.image = image
-        self.label_original = self.label_original.grid(row=1, column=0, padx=5, pady=5)
+        self.label_original.grid(row=1, column=0, padx=5, pady=5)
 
         img_to_generate_painting = tf.io.read_file(image_filename)
         img_to_generate_painting = self.preprocess_image(img_to_generate_painting)
@@ -154,20 +186,33 @@ class App:
     
 
     def load_image(self):
-        filename = easygui.fileopenbox(filetypes=["*.png", "*.jpg"]) # need to change so that they are both in one tab and
-                            # so that only files of these types can be selected (still better than GIFs, so its improvement)
+        filename = easygui.fileopenbox(filetypes=["*.png", "*.jpg"])  # need to change so that they are both in one tab
+        # and so that only files of these types can be selected
         image = Image.open(filename)
         image = image.resize(IMAGE_DISPLAY_SIZE)
         image = ImageTk.PhotoImage(image)
 
         self.label_original = Label(self.left_frame, image=image)
         self.label_original.image = image
-        self.label_original = self.label_original.grid(row=1, column=0, padx=5, pady=5)
+        self.label_original.grid(row=1, column=0, padx=5, pady=5)
 
         img_to_generate_painting = tf.io.read_file(filename)
         img_to_generate_painting = self.preprocess_image(img_to_generate_painting)
         self.original_img = img_to_generate_painting
         self.generate_picture(img_to_generate_painting)
+
+    def save_image(self, flag):
+        file_path = filedialog.asksaveasfilename(defaultextension='.png')
+        if file_path:
+            if flag:
+                image_pil = self.label_original.image
+                image = ImageTk.getimage(image_pil)
+                image.save(file_path)
+            else:
+                image_pil = self.label_generated.image
+                image = ImageTk.getimage(image_pil)
+                image.save(file_path)
+
 
 class DiffWindow:
     def __init__(self, master, generation_finished_callback):
