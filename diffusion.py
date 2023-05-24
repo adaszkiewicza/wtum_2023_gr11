@@ -11,7 +11,10 @@ import math
 
 # this is {name: path}, place in models/diffusion dir
 DIFF_MODELS_CONFIG = {
-    'Forest': 'forest-ckpt.pt'
+    'Forest': 'forest-ckpt.pt',
+    'Seaside - unstable': 'seaside_unstable-cpkt.pt',
+    'Seaside - light': 'seaside_light-cpkt.pt',
+    'Seaside - dark': 'seaside_dark-ckpt.pt'
 }
 
 class DiffModel:
