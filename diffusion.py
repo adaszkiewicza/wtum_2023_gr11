@@ -14,7 +14,9 @@ DIFF_MODELS_CONFIG = {
     'Forest': 'forest-ckpt.pt',
     'Seaside - unstable': 'seaside_unstable-cpkt.pt',
     'Seaside - light': 'seaside_light-cpkt.pt',
-    'Seaside - dark': 'seaside_dark-ckpt.pt'
+    'Seaside - dark': 'seaside_dark-ckpt.pt',
+    'Mountain - focused': 'mountain_focused-cpkt.pt',
+    'Mountain - smooth': 'mountain_smooth-cpkt.pt'
 }
 
 class DiffModel:
