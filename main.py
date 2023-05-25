@@ -56,7 +56,7 @@ class App:
 
     def setup_root(self):
         self.root = customtkinter.CTk()
-        self.root.title("Basic GUI Layout")  # title of the GUI window
+        self.root.title("Create unique images that look like paintings!")
         self.root.maxsize(900, 600)  # specify the max size the window can expand to
         self.root.config(bg="#616161")  # specify background color
 
