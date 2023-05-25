@@ -242,7 +242,7 @@ class DiffWindow:
         self.listbox.pack(side=LEFT)
 
     def setup_button(self):
-        button = Button(self.diff_window, text="GENERATE", command=self.on_generate_clicked)
+        button = customtkinter.CTkButton(self.diff_window, text="GENERATE", command=self.on_generate_clicked)
         button.pack(side=RIGHT)
 
     def on_selection_changed(self):
