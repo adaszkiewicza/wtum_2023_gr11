@@ -13,7 +13,6 @@ import customtkinter
 from diffusion import DIFF_MODELS_CONFIG, DiffImageGeneration
 
 EXAMPLE_PATH = "images/example.jpg"
-IMAGE_DISPLAY_SIZE = (256, 256)
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
 # if you thik it looks ugly set to False
