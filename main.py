@@ -9,11 +9,13 @@ from tkinter import filedialog
 
 from super_image import ImageLoader, MdsrModel
 import os
-
+import customtkinter
 from diffusion import DIFF_MODELS_CONFIG, DiffImageGeneration
 
 EXAMPLE_PATH = "images/example.jpg"
 IMAGE_DISPLAY_SIZE = (256, 256)
+customtkinter.set_appearance_mode("System")
+customtkinter.set_default_color_theme("blue")
 
 class Painters(Enum):
     MONET_1 = 0
@@ -48,10 +50,10 @@ class App:
         self.turner_generator = gan_function(Painters.TURNER.value)
 
     def setup_root(self):
-        self.root = Tk()
+        self.root = customtkinter.CTk()
         self.root.title("Basic GUI Layout")  # title of the GUI window
         self.root.maxsize(900, 600)  # specify the max size the window can expand to
-        self.root.config(bg="skyblue")  # specify background color
+        self.root.config(bg="#616161")  # specify background color
 
         # Create left and right frames
         self.left_frame = Frame(self.root, width=200, height=400, bg='grey')
@@ -64,19 +66,19 @@ class App:
         self.bottom_frame.grid(row=1,columnspan=2, padx=10, pady=5)
 
         # Create frames and labels in left_frame
-        Label(self.left_frame, text="Original Image").grid(row=0, column=0, padx=5, pady=5)
+        customtkinter.CTkLabel(self.left_frame, text="Original Image").grid(row=0, column=0, padx=5, pady=5)
         # Create frames and labels in right_frame
-        Label(self.right_frame, text="Result Image").grid(row=0, column=0, padx=5, pady=5)
+        customtkinter.CTkLabel(self.right_frame, text="Result Image").grid(row=0, column=0, padx=5, pady=5)
 
-        Button(self.bottom_frame, text="LOAD IMAGE", command=self.load_image).grid(row=0, column=0, padx=5, pady=5)
+        customtkinter.CTkButton(self.bottom_frame, text="LOAD IMAGE", command=self.load_image).grid(row=0, column=0, padx=5, pady=5)
 
-        Button(self.bottom_frame, text="GENERATE IMAGE", command=self.on_open_generation_window).grid(row=0, column=1,
+        customtkinter.CTkButton(self.bottom_frame, text="GENERATE IMAGE", command=self.on_open_generation_window).grid(row=0, column=1,
                                                                                                       padx=5, pady=5)
 
-        Button(self.bottom_frame, text="SAVE ORIGINAL IMAGE", command=lambda: self.save_image(True))\
+        customtkinter.CTkButton(self.bottom_frame, text="SAVE ORIGINAL IMAGE", command=lambda: self.save_image(True))\
             .grid(row=0, column=3, padx=5, pady=5)
 
-        Button(self.bottom_frame, text="SAVE GENERATED PAINTING", command=lambda: self.save_image(False))\
+        customtkinter.CTkButton(self.bottom_frame, text="SAVE GENERATED PAINTING", command=lambda: self.save_image(False))\
             .grid(row=0, column=4, padx=5, pady=5)
 
     def setup_listbox(self):
