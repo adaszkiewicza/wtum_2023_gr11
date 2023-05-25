@@ -51,8 +51,8 @@ class App:
 
     def setup_root(self):
         self.root = customtkinter.CTk()
-        self.root.title("Basic GUI Layout")  # title of the GUI window
-        self.root.maxsize(900, 600)  # specify the max size the window can expand to
+        self.root.title("Create unique images that look like paintings!")  # title of the GUI window
+        self.root.maxsize(1200, 1200)  # specify the max size the window can expand to
         self.root.config(bg="#616161")  # specify background color
 
         # Create left and right frames
@@ -225,6 +225,7 @@ class DiffWindow:
 
     def open(self):
         self.diff_window = customtkinter.CTkToplevel(self.master)
+        self.diff_window.attributes('-topmost', True)
         self.diff_window.title('Generate an image using diffusion')
         Label(self.diff_window, text='Generate an image using diffusion')
         self.setup_listbox()
