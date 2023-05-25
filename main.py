@@ -16,6 +16,10 @@ EXAMPLE_PATH = "images/example.jpg"
 IMAGE_DISPLAY_SIZE = (256, 256)
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
+# if you thik it looks ugly set to False
+RESIZE_WITH_AI = True
+# you CANNOT change first val, you can change second (but make it a multiple of 256 so resize looks nice) 
+IMAGE_DISPLAY_SIZE = (512, 512) if RESIZE_WITH_AI else (256, 256)
 
 class Painters(Enum):
     MONET_1 = 0
@@ -30,6 +34,8 @@ class Painters(Enum):
 class App:
     def __init__(self):
         self.setup_generators()
+        self.resizing_model_x2 = MdsrModel.from_pretrained('eugenesiow/mdsr', scale=2)
+
         self.setup_root()
         self.setup_listbox()
         self.setup_image_first()
@@ -97,8 +103,7 @@ class App:
 
     def setup_image_first(self):
         image = Image.open(EXAMPLE_PATH)
-        image = image.resize(IMAGE_DISPLAY_SIZE)
-        image = ImageTk.PhotoImage(image)
+        image = self.resize_image(image)
 
         self.label_original = Label(self.left_frame, image=image)
         self.label_original.image = image
@@ -112,7 +117,7 @@ class App:
         self.original_img = img_to_generate_painting
         self.generate_picture(img_to_generate_painting)
 
-    def generate_picture(self, img):
+    def generate_picture(self, img, is_generated_diff=False):
         selected_index = self.selected_artist.curselection()
         if selected_index:
             index = selected_index[0]
@@ -145,8 +150,7 @@ class App:
 
         prediction = (prediction * 127.5 + 127.5).astype(np.uint8)
         generated_img = Image.fromarray(prediction)
-        generated_img = generated_img.resize(IMAGE_DISPLAY_SIZE)
-        generated_img = ImageTk.PhotoImage(generated_img)
+        generated_img = self.resize_image(generated_img, is_generated_diff)
 
         self.label_generated = Label(self.right_frame, image=generated_img)
         self.label_generated.image = generated_img
@@ -164,16 +168,30 @@ class App:
     def on_open_generation_window(self):
         self.diff_window.open()
 
+    def resize_image(self, image, is_generated_diff=False):
+        if RESIZE_WITH_AI and is_generated_diff:
+            inputs = ImageLoader.load_image(image)
+            preds = self.resizing_model_x2(inputs)
+
+            image_filename = 'res.png'
+            ImageLoader.save_image(preds, image_filename)
+
+            image = Image.open(image_filename)
+            os.remove(image_filename)
+        else:
+            image = image.resize(IMAGE_DISPLAY_SIZE)
+
+        return ImageTk.PhotoImage(image)
+
     def diff_generation_finished_callback(self, image):
-        resizing_model = MdsrModel.from_pretrained('eugenesiow/mdsr', scale=2)
         inputs = ImageLoader.load_image(image)
-        preds = resizing_model(inputs)
+        preds = self.resizing_model_x2(inputs)
 
         image_filename = 'temp.png'
         ImageLoader.save_image(preds, image_filename)
 
         image = Image.open(image_filename)
-        image = ImageTk.PhotoImage(image)
+        image = self.resize_image(image, True)
 
         self.label_original = Label(self.left_frame, image=image)
         self.label_original.image = image
@@ -182,7 +200,7 @@ class App:
         img_to_generate_painting = tf.io.read_file(image_filename)
         img_to_generate_painting = self.preprocess_image(img_to_generate_painting)
         self.original_img = img_to_generate_painting
-        self.generate_picture(img_to_generate_painting)
+        self.generate_picture(img_to_generate_painting, True)
 
         os.remove(image_filename)
     
@@ -191,8 +209,7 @@ class App:
         filename = easygui.fileopenbox(filetypes=["*.png", "*.jpg"])  # need to change so that they are both in one tab
         # and so that only files of these types can be selected
         image = Image.open(filename)
-        image = image.resize(IMAGE_DISPLAY_SIZE)
-        image = ImageTk.PhotoImage(image)
+        image = self.resize_image(image)
 
         self.label_original = Label(self.left_frame, image=image)
         self.label_original.image = image
