@@ -215,7 +215,6 @@ class App:
                 image = ImageTk.getimage(image_pil)
                 image.save(file_path)
 
-
 class DiffWindow:
     def __init__(self, master, generation_finished_callback):
         self.master = master
