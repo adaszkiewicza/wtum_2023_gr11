@@ -224,7 +224,7 @@ class DiffWindow:
         self.master_callback = generation_finished_callback
 
     def open(self):
-        self.diff_window = Toplevel(self.master)
+        self.diff_window = customtkinter.CTkToplevel(self.master)
         self.diff_window.title('Generate an image using diffusion')
         Label(self.diff_window, text='Generate an image using diffusion')
         self.setup_listbox()
