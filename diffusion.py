@@ -39,7 +39,7 @@ class DiffImageGeneration:
             checkpiont_path = os.path.join(self.models_dict, checkpiont_path)
 
             try:
-                checkpoint = torch.load(checkpiont_path, map_location=torch.device('cpu'))
+                checkpoint = torch.load(checkpiont_path)
             except Exception as exp:
                 print('LOOK AT diffusion.py file. A model could not be found! Aborting...')
                 raise exp
