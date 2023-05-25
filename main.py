@@ -260,7 +260,7 @@ class DiffWindow:
 
     def setup_button(self):
         button = customtkinter.CTkButton(self.diff_window, text="GENERATE", command=self.on_generate_clicked)
-        button.pack(side=RIGHT)
+        button.pack(side=LEFT)
 
     def on_selection_changed(self):
         self.diff_image_generator.switch_active_model(self.listbox.curselection()[0])
