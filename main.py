@@ -174,7 +174,7 @@ class App:
             ImageLoader.save_image(preds, image_filename)
 
             image = Image.open(image_filename)
-            os.remove(image_filename)
+            # os.remove(image_filename)
         else:
             image = image.resize(IMAGE_DISPLAY_SIZE)
 
