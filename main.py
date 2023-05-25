@@ -220,16 +220,15 @@ class App:
         self.generate_picture(img_to_generate_painting)
 
     def save_image(self, flag):
-        file_path = filedialog.asksaveasfilename(defaultextension='.png')
+        file_path = filedialog.asksaveasfilename(defaultextension='.jpg')
         if file_path:
             if flag:
                 image_pil = self.label_original.image
-                image = ImageTk.getimage(image_pil)
-                image.save(file_path)
             else:
                 image_pil = self.label_generated.image
-                image = ImageTk.getimage(image_pil)
-                image.save(file_path)
+            image = ImageTk.getimage(image_pil)
+            image = image.convert("RGB")
+            image.save(file_path)
 
 
 class DiffWindow:
