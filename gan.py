@@ -3,14 +3,23 @@ from tensorflow import keras
 from keras import layers
 import tensorflow_addons as tfa
 
-MONET_1_PATH = "models/monet_generator_weights.h5"
-MONET_2_PATH = "models/monet_tensorflow_generator_weights.h5"
-VANGOGH_PATH = "models/vangogh_generator_weights.h5"
-UKIYOE_PATH = "models/ukiyoe_generator_weights.h5"
-CEZANNE_1_PATH = "models/cezanne_generator_weights.h5"
-CEZANNE_2_PATH = "models/cezanne_old_generator_weights.h5"
-ROSS_PATH = "models/bobross_generator_weights.h5"
-TURNER_PATH = "models/turner_generator_weights.h5"
+# MONET_1_PATH = "models/monet_generator_weights.h5"
+# MONET_2_PATH = "models/monet_tensorflow_generator_weights.h5"
+# VANGOGH_PATH = "models/vangogh_generator_weights.h5"
+# UKIYOE_PATH = "models/ukiyoe_generator_weights.h5"
+# CEZANNE_1_PATH = "models/cezanne_generator_weights.h5"
+# CEZANNE_2_PATH = "models/cezanne_old_generator_weights.h5"
+# ROSS_PATH = "models/bobross_generator_weights.h5"
+# TURNER_PATH = "models/turner_generator_weights.h5"
+
+MONET_1_PATH = "models/photo_generators/photo_generator_weights_monet_400.h5"
+MONET_2_PATH = "models/photo_generators/photo_generator_weights_monet_100.h5"
+VANGOGH_PATH = "models/photo_generators/photo_generator_weights_vangogh_600.h5"
+UKIYOE_PATH = "models/photo_generators/photo_generator_weights_ukiyoe_50.h5"
+CEZANNE_1_PATH = "models/photo_generators/photo_generator_weights_cezanne_600.h5"
+CEZANNE_2_PATH = "models/photo_generators/photo_generator_weights_cezanne_50.h5"
+ROSS_PATH = "models/photo_generators/photo_generator_weights_bobross.h5"
+TURNER_PATH = "models/photo_generators/photo_generator_weights_turner.h5"
 
 def gan_function(artist = 0):
 
@@ -143,26 +152,47 @@ def gan_function(artist = 0):
         return model
 
     with strategy.scope():
-        if(artist == 0):
-            monet_generator = Generator(weights_path=MONET_1_PATH)
-        elif(artist == 1):
-            monet_generator = Generator(weights_path=MONET_2_PATH)
-        elif(artist == 2):
-            monet_generator = Generator(weights_path=VANGOGH_PATH)
-        elif(artist == 3):
-            monet_generator = Generator(weights_path=UKIYOE_PATH)
-        elif (artist == 4):
-            monet_generator = Generator(weights_path=CEZANNE_1_PATH)
-        elif (artist == 5):
-            monet_generator = Generator(weights_path=CEZANNE_2_PATH)
-        elif (artist == 6):
-            monet_generator = Generator(weights_path=ROSS_PATH)
-        elif (artist == 7):
-            monet_generator = Generator(weights_path=TURNER_PATH)
-        else:
-            monet_generator = Generator(weights_path=MONET_1_PATH)
+        # if(artist == 0):
+        #     monet_generator = Generator(weights_path=MONET_1_PATH)
+        # elif(artist == 1):
+        #     monet_generator = Generator(weights_path=MONET_2_PATH)
+        # elif(artist == 2):
+        #     monet_generator = Generator(weights_path=VANGOGH_PATH)
+        # elif(artist == 3):
+        #     monet_generator = Generator(weights_path=UKIYOE_PATH)
+        # elif (artist == 4):
+        #     monet_generator = Generator(weights_path=CEZANNE_1_PATH)
+        # elif (artist == 5):
+        #     monet_generator = Generator(weights_path=CEZANNE_2_PATH)
+        # elif (artist == 6):
+        #     monet_generator = Generator(weights_path=ROSS_PATH)
+        # elif (artist == 7):
+        #     monet_generator = Generator(weights_path=TURNER_PATH)
+        # else:
+        #     monet_generator = Generator(weights_path=MONET_1_PATH)
+        #
+        # photo_generator = Generator()
 
-        photo_generator = Generator()
+        monet_generator = Generator()
+
+        if(artist == 0):
+            photo_generator = Generator(weights_path=MONET_1_PATH)
+        elif(artist == 1):
+            photo_generator = Generator(weights_path=MONET_2_PATH)
+        elif(artist == 2):
+            photo_generator = Generator(weights_path=VANGOGH_PATH)
+        elif(artist == 3):
+            photo_generator = Generator(weights_path=UKIYOE_PATH)
+        elif (artist == 4):
+            photo_generator = Generator(weights_path=CEZANNE_1_PATH)
+        elif (artist == 5):
+            photo_generator = Generator(weights_path=CEZANNE_2_PATH)
+        elif (artist == 6):
+            photo_generator = Generator(weights_path=ROSS_PATH)
+        elif (artist == 7):
+            photo_generator = Generator(weights_path=TURNER_PATH)
+        else:
+            photo_generator = Generator(weights_path=MONET_1_PATH)
 
         monet_discriminator = Discriminator()
         photo_discriminator = Discriminator()
@@ -331,4 +361,5 @@ def gan_function(artist = 0):
             identity_loss_fn=identity_loss
         )
 
-    return monet_generator
+    # return monet_generator
+    return photo_generator
