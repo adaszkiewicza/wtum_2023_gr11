@@ -1,4 +1,10 @@
 # wtum_gr11
+
+## Używanie
+Główna aplikacja okienkowa uruchamia się poprzez przepuszczenie `main.py` przez pythona.
+Aby pobrać wymagane do działania modele, należy uruchomić skrypt `setup.py`.
+Aby upewnić się, że pobrane są odpowiednie paczki do pythona należy uruchomić `pip install -r requirements.txt` 
+
 ## Opis projektu
 W ramach projektu zostanie stworzony system generujący obrazy w stylu znanego malarza. Do jego stworzenia planujemy wykorzystać różne metody w celu ich porównania. Zakładamy, że obrazy wynikowe będą generowane ze zdjęcia podanego przez użytkownika.
 
