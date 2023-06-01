@@ -7,6 +7,7 @@ MONET_1_PATH = "models/monet_generator_weights.h5"
 MONET_2_PATH = "models/monet_tensorflow_generator_weights.h5"
 VANGOGH_PATH = "models/vangogh_generator_weights.h5"
 UKIYOE_PATH = "models/ukiyoe_generator_weights.h5"
+UKIYOE_2_PATH = "models/ukiyoe_500_generator_weights.h5"
 CEZANNE_1_PATH = "models/cezanne_generator_weights.h5"
 CEZANNE_2_PATH = "models/cezanne_old_generator_weights.h5"
 ROSS_PATH = "models/bobross_generator_weights.h5"
@@ -150,14 +151,16 @@ def gan_function(artist = 0):
         elif(artist == 2):
             monet_generator = Generator(weights_path=VANGOGH_PATH)
         elif(artist == 3):
+            monet_generator = Generator(weights_path=UKIYOE_2_PATH)
+        elif(artist == 4):
             monet_generator = Generator(weights_path=UKIYOE_PATH)
-        elif (artist == 4):
-            monet_generator = Generator(weights_path=CEZANNE_1_PATH)
         elif (artist == 5):
-            monet_generator = Generator(weights_path=CEZANNE_2_PATH)
+            monet_generator = Generator(weights_path=CEZANNE_1_PATH)
         elif (artist == 6):
-            monet_generator = Generator(weights_path=ROSS_PATH)
+            monet_generator = Generator(weights_path=CEZANNE_2_PATH)
         elif (artist == 7):
+            monet_generator = Generator(weights_path=ROSS_PATH)
+        elif (artist == 8):
             monet_generator = Generator(weights_path=TURNER_PATH)
         else:
             monet_generator = Generator(weights_path=MONET_1_PATH)

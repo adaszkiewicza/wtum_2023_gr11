@@ -24,11 +24,12 @@ class Painters(Enum):
     MONET_1 = 0
     MONET_2 = 1
     VANGOGH = 2
-    UKIYOE = 3
-    CEZANNE_1 = 4
-    CEZANNE_2 = 5
-    ROSS = 6
-    TURNER = 7
+    UKIYOE_1 = 3
+    UKIYOE_2 = 4
+    CEZANNE_1 = 5
+    CEZANNE_2 = 6
+    ROSS = 7
+    TURNER = 8
 
 class App:
     def __init__(self):
@@ -48,7 +49,8 @@ class App:
         self.monet_1_generator = gan_function(Painters.MONET_1.value)
         self.monet_2_generator = gan_function(Painters.MONET_2.value)
         self.vangogh_generator = gan_function(Painters.VANGOGH.value)
-        self.ukiyoe_generator = gan_function(Painters.UKIYOE.value)
+        self.ukiyoe_1_generator = gan_function(Painters.UKIYOE_1.value)
+        self.ukiyoe_2_generator = gan_function(Painters.UKIYOE_2.value)
         self.cezanne_1_generator = gan_function(Painters.CEZANNE_1.value)
         self.cezanne_2_generator = gan_function(Painters.CEZANNE_2.value)
         self.ross_generator = gan_function(Painters.ROSS.value)
@@ -92,7 +94,8 @@ class App:
         self.selected_artist.insert(Painters.MONET_1.value, "Monet v1")
         self.selected_artist.insert(Painters.MONET_2.value, "Monet v2")
         self.selected_artist.insert(Painters.VANGOGH.value, "Van Gogh")
-        self.selected_artist.insert(Painters.UKIYOE.value, "Ukiyoe")
+        self.selected_artist.insert(Painters.UKIYOE_1.value, "Ukiyoe")
+        self.selected_artist.insert(Painters.UKIYOE_2.value, "Ukiyoe v2")
         self.selected_artist.insert(Painters.CEZANNE_1.value, "Cezanne v1")
         self.selected_artist.insert(Painters.CEZANNE_2.value, "Cezanne v2")
         self.selected_artist.insert(Painters.ROSS.value, "Bob Ross")
@@ -130,18 +133,21 @@ class App:
                 prediction = self.vangogh_generator(img, training=False)[0].numpy()
 
             elif index == 3:
-                prediction = self.ukiyoe_generator(img, training=False)[0].numpy()
+                prediction = self.ukiyoe_1_generator(img, training=False)[0].numpy()
 
             elif index == 4:
-                prediction = self.cezanne_1_generator(img, training=False)[0].numpy()
+                prediction = self.ukiyoe_2_generator(img, training=False)[0].numpy()
 
             elif index == 5:
-                prediction = self.cezanne_2_generator(img, training=False)[0].numpy()
+                prediction = self.cezanne_1_generator(img, training=False)[0].numpy()
 
             elif index == 6:
-                prediction = self.ross_generator(img, training=False)[0].numpy()
+                prediction = self.cezanne_2_generator(img, training=False)[0].numpy()
 
             elif index == 7:
+                prediction = self.ross_generator(img, training=False)[0].numpy()
+
+            elif index == 8:
                 prediction = self.turner_generator(img, training=False)[0].numpy()
 
         else:
